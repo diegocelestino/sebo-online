@@ -1,8 +1,7 @@
 package com.seboonline.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -10,27 +9,22 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Data
 @Table(name = "transactions")
 public class Transaction {
     @Id
+    @Column(name = "transaction_id")
     private UUID id;
 
-    @Column(nullable = false)
-    private BigDecimal value;
+    private Timestamp date;
 
-    @Column(nullable = false)
-    private Timestamp createDate;
+    @Column(name = "buyer_id", nullable = false)
+    private UUID buyerId;
 
-    @OneToOne
-    private User buyer;
+    @Column(name = "seller_id", nullable = false)
+    private UUID sellerId;
 
-    @OneToOne
-    private User seller;
-
-    @OneToOne
-    private Item item;
-
+    @Column(name = "item_id", nullable = false)
+    private UUID itemId;
 }

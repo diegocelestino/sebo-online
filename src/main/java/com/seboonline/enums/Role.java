@@ -1,6 +1,6 @@
 package com.seboonline.enums;
 
-public enum Type {
+public enum Role {
     BUYER,
     SELLER,
     ADMIN

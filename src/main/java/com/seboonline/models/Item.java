@@ -1,8 +1,6 @@
 package com.seboonline.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,44 +8,35 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Table(name = "items")
 public class Item {
+
     @Id
-    private UUID id;
+    @Column(name = "item_id")
+    private UUID itemId;
 
-    @ManyToOne
-    private User user;
+    @Column(nullable = false, length = 60)
+    private String title;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column()
     private byte[] image;
 
-    @ManyToOne
-    private Category category;
+    @Column(nullable = false)
+    private BigDecimal value;
 
-    @Column()
-    private String author;
-
-    @Column()
-    private BigDecimal price;
-
-    @Column()
+    @Column(nullable = false, length = 1200)
     private String description;
 
-    @Column()
     private Boolean active;
 
-    @Column()
+    @Column(length = 15)
     private String edition;
 
-    @Column
+    @Column(length = 30)
     private String frequency;
 
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
 }
