@@ -1,7 +1,10 @@
 package com.seboonline.services.impl;
 
+import com.seboonline.dtos.SignUpResponseDto;
 import com.seboonline.dtos.UserDto;
-import com.seboonline.exceptions.UserNameAlreadyExists;
+import com.seboonline.dtos.UserUpdateDto;
+import com.seboonline.exceptions.UserNameAlreadyExistsException;
+import com.seboonline.exceptions.UserNotFoundException;
 import com.seboonline.mappers.UserMapper;
 import com.seboonline.models.User;
 import com.seboonline.repositories.UserRepository;
@@ -21,25 +24,44 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDto save(User user) {
-        checkIfUserAlreadyExists(user);
-        return userMapper.to(this.userRepository.save(user));
+    public SignUpResponseDto save(User user) {
+        checkIfUserNameAlreadyExists(user.getUsername());
+        return userMapper.toSignUpResponse(this.userRepository.save(user));
     }
 
     @Override
-    public Optional<User> findByName(String userName) {
-        return this.userRepository.findByName(userName);
+    public UserDto getUserByUserName(String userName) {
+        User user = findByUserName(userName);
+        return this.userMapper.to(user);
+    }
+
+    @Override
+    public UserDto updateUser(User user, UserUpdateDto userUpdateDto) {
+
+        if (!user.getUsername().equals(userUpdateDto.getUserName())){
+            checkIfUserNameAlreadyExists(userUpdateDto.getUserName());
+        }
+        user.setName(userUpdateDto.getName());
+        user.setUserName(userUpdateDto.getUserName());
+        user.setActive(userUpdateDto.getActive());
+        return this.userMapper.to(this.userRepository.save(user));
     }
 
     @Override
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByName(username)
+        return userName -> userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    private void checkIfUserAlreadyExists(User user) {
-        if (this.userRepository.existsByUserName(user.getUsername())){
-            throw new UserNameAlreadyExists(user.getUsername());
+    private void checkIfUserNameAlreadyExists(String userName) {
+        if (this.userRepository.existsByUserName(userName)){
+            throw new UserNameAlreadyExistsException(userName);
         }
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        return this.userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UserNotFoundException(userName));
     }
 }

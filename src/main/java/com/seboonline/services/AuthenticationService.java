@@ -5,10 +5,10 @@ import com.seboonline.dtos.JwtAuthenticationResponse;
 import com.seboonline.dtos.SignInDto;
 
 import com.seboonline.dtos.SignUpDto;
-import com.seboonline.dtos.UserDto;
+import com.seboonline.dtos.SignUpResponseDto;
 
 public interface AuthenticationService {
-    UserDto signUp(SignUpDto request);
+    SignUpResponseDto signUp(SignUpDto request);
 
     JwtAuthenticationResponse signIn(SignInDto request);
 }

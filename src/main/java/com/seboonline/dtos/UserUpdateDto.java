@@ -1,7 +1,6 @@
 package com.seboonline.dtos;
 
 import com.seboonline.enums.Role;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +13,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private UUID id;
+public class UserUpdateDto {
     private String name;
     private String userName;
     private Boolean active = true;
-    private List<Role> roles;
 }

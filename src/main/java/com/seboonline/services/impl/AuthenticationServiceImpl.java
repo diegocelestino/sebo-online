@@ -4,7 +4,7 @@ package com.seboonline.services.impl;
 import com.seboonline.dtos.JwtAuthenticationResponse;
 import com.seboonline.dtos.SignInDto;
 import com.seboonline.dtos.SignUpDto;
-import com.seboonline.dtos.UserDto;
+import com.seboonline.dtos.SignUpResponseDto;
 import com.seboonline.enums.Role;
 import com.seboonline.models.User;
 import com.seboonline.services.AuthenticationService;
@@ -30,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public UserDto signUp(SignUpDto signUpDto) {
+    public SignUpResponseDto signUp(SignUpDto signUpDto) {
         User user = User.builder()
                 .id(UUID.randomUUID())
                 .name(signUpDto.getName())
@@ -43,14 +43,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userService.save(user);
     }
 
-
-
     @Override
     public JwtAuthenticationResponse signIn(SignInDto signInDto) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInDto.getUserName(), signInDto.getPassword()));
-        var user = userService.findByName(signInDto.getUserName())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid name or password."));
+        var user = userService.findByUserName(signInDto.getUserName());
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
