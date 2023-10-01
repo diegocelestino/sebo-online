@@ -1,6 +1,7 @@
 package com.seboonline.services.impl;
 
 
+import com.seboonline.models.User;
 import com.seboonline.services.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -54,8 +55,11 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Date extractExpiration(String token) {
+
         return extractClaim(token, Claims::getExpiration);
     }
+
+
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)

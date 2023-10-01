@@ -15,8 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -32,12 +30,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByUserName(String userName) {
         User user = findByUserName(userName);
+        checkIfUserIsDeleted(user);
         return this.userMapper.to(user);
     }
 
     @Override
     public UserDto updateUser(User user, UserUpdateDto userUpdateDto) {
-
         if (!user.getUsername().equals(userUpdateDto.getUserName())){
             checkIfUserNameAlreadyExists(userUpdateDto.getUserName());
         }
@@ -45,6 +43,12 @@ public class UserServiceImpl implements UserService {
         user.setUserName(userUpdateDto.getUserName());
         user.setActive(userUpdateDto.getActive());
         return this.userMapper.to(this.userRepository.save(user));
+    }
+
+    @Override
+    public void deleteUser(User user){
+        user.setDeleted(true);
+        this.userRepository.save(user);
     }
 
     @Override
@@ -64,4 +68,15 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UserNotFoundException(userName));
     }
+
+    private void checkIfUserIsDeleted(User user) {
+        if(isUserDeleted(user)){
+            throw new UserNotFoundException(user.getUsername());
+        }
+    }
+
+    private Boolean isUserDeleted(User user) {
+        return user.getDeleted();
+    }
+
 }

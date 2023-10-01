@@ -15,18 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
 public class UserController {
-    private final AuthenticationService authenticationService;
     private final UserService userService;
-
-    @PostMapping("/signUp")
-    public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpDto signUpDto) {
-        return ResponseEntity.ok(authenticationService.signUp(signUpDto));
-    }
-
-    @PostMapping("/signIn")
-    public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInDto signInDto) {
-        return ResponseEntity.ok(authenticationService.signIn(signInDto));
-    }
 
     @GetMapping()
     public ResponseEntity<UserDto> getUser(Authentication authentication){
@@ -37,9 +26,16 @@ public class UserController {
 
     @PutMapping()
     public ResponseEntity<UserDto> update(@RequestBody UserUpdateDto userUpdateDto, Authentication authentication){
-        System.out.println("chegou aqui");
         User user = (User)authentication.getPrincipal();
         UserDto userDto = this.userService.updateUser(user, userUpdateDto);
         return ResponseEntity.ok(userDto);
     }
+
+    @DeleteMapping()
+    public ResponseEntity<UserDto> delete(Authentication authentication){
+        User user = (User)authentication.getPrincipal();
+        this.userService.deleteUser(user);
+        return ResponseEntity.noContent().build();
+    }
+
 }

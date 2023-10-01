@@ -1,5 +1,6 @@
 package com.seboonline.security;
 
+import com.seboonline.enums.Role;
 import com.seboonline.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,9 @@ public class WebSecurityConfigure {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(HttpMethod.GET, "/api/v1/users/**").authenticated()
+                        request.requestMatchers("/api/v1/users/**").authenticated()
+                                .requestMatchers("/api/v1/auth/logoff").authenticated()
+                                .requestMatchers("/api/v1/admin/**").hasAuthority(Role.ADMIN.toString())
                         .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -54,8 +57,7 @@ public class WebSecurityConfigure {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }

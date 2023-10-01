@@ -1,5 +1,6 @@
 package com.seboonline.services;
 
+import com.seboonline.models.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {

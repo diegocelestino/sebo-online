@@ -1,6 +1,9 @@
 package com.seboonline.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,17 +12,22 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @Data
-@Table(name = "authors")
-public class Author {
+@Table(name = "tokens")
+public class Token {
 
     @Id
-    @Column(name = "author_id")
+    @Column(name = "token_id")
     private UUID id;
 
-    @Column(nullable = false, length = 60)
-    private String name;
+    @Column(nullable = false, name="user_id")
+    private UUID userId;
 
-    @Column(name = "item_id", nullable = false)
-    private UUID itemId;
+    @Column(nullable = false, length = 600, name = "access_token")
+    private String token;
 
+    public Token(UUID userId, String token){
+        this.id = UUID.randomUUID();
+        this.userId = userId;
+        this.token = token;
+    }
 }

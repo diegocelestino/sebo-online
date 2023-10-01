@@ -51,6 +51,8 @@ public class User implements UserDetails  {
     @Column(length = 30)
     private String specialization;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,6 +85,6 @@ public class User implements UserDetails  {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !this.deleted;
     }
 }
