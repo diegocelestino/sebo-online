@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .userName(signUpDto.getUserName())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .active(true)
-                .roles(List.of(Role.BUYER, Role.SELLER))
+                .roles(List.of(Role.BUYER, Role.SELLER, Role.ADMIN))
                 .startDate(Timestamp.from(Instant.now()))
                 .deleted(false)
                 .build();

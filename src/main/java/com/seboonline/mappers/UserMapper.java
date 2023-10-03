@@ -5,6 +5,9 @@ import com.seboonline.dtos.UserDto;
 import com.seboonline.models.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class UserMapper {
 
@@ -25,5 +28,19 @@ public class UserMapper {
                 user.getActive(),
                 user.getRoles()
         );
+    }
+
+    public List<UserDto> to(List<User> users){
+        List<UserDto> usersDto = new ArrayList<>();
+        for (User user:users) {
+            usersDto.add(new UserDto(
+                    user.getId(),
+                    user.getName(),
+                    user.getUsername(),
+                    user.getActive(),
+                    user.getRoles()
+            ));
+        }
+        return usersDto;
     }
 }
